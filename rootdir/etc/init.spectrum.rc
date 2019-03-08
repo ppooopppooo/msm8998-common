@@ -1,0 +1,217 @@
+# Initialization
+on property:sys.boot_completed=1
+   chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+   chown system system /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+   chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+   chown system system /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+   chown system system /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+   chown system system /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
+   chown system system /sys/module/workqueue/paramaters/power_efficient
+   chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+   chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+   chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+   chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+   chmod system system /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
+   chmod system system /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
+   chmod system system /sys/class/kgsl/kgsl-3d0/devfreq/governor
+   chmod 0664 /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
+   chmod 0664 /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
+   chmod 0664 /sys/class/kgsl/kgsl-3d0/devfreq/governor
+   # Set default profile on first boot
+   exec u:r:init:s0 root root -- /init.profiles.sh
+   exec u:r:su:s0 root root -- /init.profiles.sh
+   # Enable Spectrum support
+   setprop spectrum.support 1
+   # Add kernel name
+   setprop persist.spectrum.kernel MinimalVarian
+# Balance (default profile)
+on property:persist.spectrum.profile=0
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 175000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1900800
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 175000
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 2457000
+    write /sys/module/cpu_boost/parameters/input_boost_enabled 1
+    write /sys/module/cpu_boost/parameters/migration_load_threshold 15
+    write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
+    write /sys/module/adreno_idler/parameters/adreno_idler_active 1
+    write /dev/cpuset/top-app/cpus 0-7
+    write /dev/cpuset/foreground/cpus 0-7
+    write /dev/cpuset/foreground/boost/cpus 0-7
+    write /dev/cpuset/background/cpus 0-7
+    write /dev/cpuset/system-background/cpus 0-7
+    write /dev/stune/foreground/schedtune.prefer_idle 1
+    write /dev/stune/top-app/schedtune.boost 5
+    write /dev/stune/top-app/schedtune.prefer_idle 1
+    write /dev/stune/top-app/schedtune.dynamic_boost 0
+    write /dev/stune/schedtune.dynamic_boost 0
+    write /dev/stune/schedtune.boost 1
+    write /sys/module/cpu_input_boost/parameters/dynamic_stune_boost 15
+    write /sys/module/cpu_input_boost/parameters/input_boost_duration 64
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 20
+    write /sys/module/cpu_boost/parameters/input_boost_ms 64
+    write /dev/stune/rt/schedtune.boost 0
+    write /dev/stune/rt/schedtune.prefer_idle 0
+    write /sys/block/sde/queue/iostats 1
+    write /sys/block/sde/queue/scheduler bfq
+    write /sys/block/sde/queue/iosched/slice_idle 0
+    write /sys/block/sde/queue/read_ahead_kb 128
+    write /sys/block/sde/queue/nr_requests 256
+    write /sys/module/governor_msm_adreno_tz/parameters/boost_freq 414000000
+    write /sys/module/governor_msm_adreno_tz/parameters/boost_duration 750
+    write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 180000000
+    write /sys/class/kgsl/kgsl-3d0/max_gpuclk 710000000 
+# Performance
+on property:persist.spectrum.profile=1
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 2112000
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 300000
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 2592000
+    write /sys/module/cpu_boost/parameters/input_boost_enabled 1
+    write /sys/module/cpu_boost/parameters/migration_load_threshold 15
+    write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
+    write /sys/module/adreno_idler/parameters/adreno_idler_active 0
+    write /dev/cpuset/top-app/cpus 0-7
+    write /dev/cpuset/foreground/cpus 0-7
+    write /dev/cpuset/foreground/boost/cpus 0-7
+    write /dev/cpuset/background/cpus 0-7
+    write /dev/cpuset/system-background/cpus 0-7
+    write /dev/stune/foreground/schedtune.prefer_idle 0
+    write /dev/stune/top-app/schedtune.boost 20
+    write /dev/stune/top-app/schedtune.prefer_idle 0
+    write /dev/stune/top-app/schedtune.dynamic_boost 0
+    write /dev/stune/schedtune.dynamic_boost 0
+    write /dev/stune/schedtune.boost 1
+    write /sys/module/cpu_input_boost/parameters/dynamic_stune_boost 20
+    write /sys/module/cpu_input_boost/parameters/input_boost_duration 64
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 20
+    write /sys/module/cpu_boost/parameters/input_boost_ms 64
+    write /dev/stune/rt/schedtune.boost 1
+    write /dev/stune/rt/schedtune.prefer_idle 0
+    write /sys/block/sde/queue/iostats 1
+    write /sys/block/sde/queue/scheduler noop
+    write /sys/block/sde/queue/iosched/slice_idle 0
+    write /sys/block/sde/queue/read_ahead_kb 128
+    write /sys/block/sde/queue/nr_requests 256
+    write /sys/module/governor_msm_adreno_tz/parameters/boost_freq 414000000
+    write /sys/module/governor_msm_adreno_tz/parameters/boost_duration 750
+    write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 257000000
+    write /sys/class/kgsl/kgsl-3d0/max_gpuclk 710000000 
+# Battery
+on property:persist.spectrum.profile=2
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 175000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 672000
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 175000
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 652000
+    write /sys/module/cpu_boost/parameters/input_boost_enabled 1
+    write /sys/module/cpu_boost/parameters/migration_load_threshold 15
+    write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
+    write /sys/module/adreno_idler/parameters/adreno_idler_active 1
+    write /dev/cpuset/top-app/cpus 0-7
+    write /dev/cpuset/foreground/cpus 0-7
+    write /dev/cpuset/foreground/boost/cpus 0-7
+    write /dev/cpuset/background/cpus 0-7
+    write /dev/cpuset/system-background/cpus 0-7
+    write /dev/stune/foreground/schedtune.prefer_idle 1
+    write /dev/stune/top-app/schedtune.boost 1
+    write /dev/stune/top-app/schedtune.prefer_idle 1
+    write /dev/stune/top-app/schedtune.dynamic_boost 0
+    write /dev/stune/schedtune.dynamic_boost 0
+    write /dev/stune/schedtune.boost 0
+    write /sys/module/cpu_input_boost/parameters/dynamic_stune_boost 5
+    write /sys/module/cpu_input_boost/parameters/input_boost_duration 32
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 5
+    write /sys/module/cpu_boost/parameters/input_boost_ms 32
+    write /dev/stune/rt/schedtune.boost 0
+    write /dev/stune/rt/schedtune.prefer_idle 1
+    write /sys/block/sde/queue/iostats 1
+    write /sys/block/sde/queue/scheduler deadline
+    write /sys/block/sde/queue/iosched/slice_idle 0
+    write /sys/block/sde/queue/read_ahead_kb 128
+    write /sys/block/sde/queue/nr_requests 256
+    write /sys/module/governor_msm_adreno_tz/parameters/boost_freq 0
+    write /sys/module/governor_msm_adreno_tz/parameters/boost_duration 0
+    write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 180000000
+    write /sys/class/kgsl/kgsl-3d0/max_gpuclk 515000000 
+# Gaming
+on property:persist.spectrum.profile=3
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 2112000
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor performance
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 300000
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 2592000
+    write /sys/module/cpu_boost/parameters/input_boost_enabled 1
+    write /sys/module/cpu_boost/parameters/migration_load_threshold 15
+    write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
+    write /sys/module/adreno_idler/parameters/adreno_idler_active 0
+    write /dev/cpuset/top-app/cpus 0-7
+    write /dev/cpuset/foreground/cpus 0-7
+    write /dev/cpuset/foreground/boost/cpus 0-7
+    write /dev/cpuset/background/cpus 0-7
+    write /dev/cpuset/system-background/cpus 0-7
+    write /dev/stune/foreground/schedtune.prefer_idle 0
+    write /dev/stune/top-app/schedtune.boost 20
+    write /dev/stune/top-app/schedtune.prefer_idle 0
+    write /dev/stune/top-app/schedtune.dynamic_boost 0
+    write /dev/stune/schedtune.dynamic_boost 0
+    write /dev/stune/schedtune.boost 1
+    write /sys/module/cpu_input_boost/parameters/dynamic_stune_boost 20
+    write /sys/module/cpu_input_boost/parameters/input_boost_duration 64
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 20
+    write /sys/module/cpu_boost/parameters/input_boost_ms 64
+    write /dev/stune/rt/schedtune.boost 1
+    write /dev/stune/rt/schedtune.prefer_idle 0
+    write /sys/block/sde/queue/iostats 1
+    write /sys/block/sde/queue/scheduler noop
+    write /sys/block/sde/queue/iosched/slice_idle 0
+    write /sys/block/sde/queue/read_ahead_kb 128
+    write /sys/block/sde/queue/nr_requests 256
+    write /sys/class/kgsl/kgsl-3d0/devfreq/governor performance
+    write /sys/module/governor_msm_adreno_tz/parameters/boost_freq 596000000
+    write /sys/module/governor_msm_adreno_tz/parameters/boost_duration 750
+    write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 342000000
+    write /sys/class/kgsl/kgsl-3d0/max_gpuclk 810000000 
+# Ultra Battery
+on property:persist.spectrum.profile=4
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 175000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 364000
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 175000
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 345000
+    write /sys/module/cpu_boost/parameters/input_boost_enabled 0
+    write /sys/module/cpu_boost/parameters/migration_load_threshold 15
+    write /sys/class/kgsl/kgsl-3d0/devfreq/governor powersave
+    write /sys/module/adreno_idler/parameters/adreno_idler_active 1
+    write /dev/cpuset/top-app/cpus 0-7
+    write /dev/cpuset/foreground/cpus 0-7
+    write /dev/cpuset/foreground/boost/cpus 0-7
+    write /dev/cpuset/background/cpus 0-7
+    write /dev/cpuset/system-background/cpus 0-7
+    write /dev/stune/foreground/schedtune.prefer_idle 1
+    write /dev/stune/top-app/schedtune.boost 1
+    write /dev/stune/top-app/schedtune.prefer_idle 1
+    write /dev/stune/top-app/schedtune.dynamic_boost 0
+    write /dev/stune/schedtune.dynamic_boost 0
+    write /dev/stune/schedtune.boost 0
+    write /sys/module/cpu_input_boost/parameters/dynamic_stune_boost 3
+    write /sys/module/cpu_input_boost/parameters/input_boost_duration 16
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 3
+    write /sys/module/cpu_boost/parameters/input_boost_ms 16
+    write /dev/stune/rt/schedtune.boost 0
+    write /dev/stune/rt/schedtune.prefer_idle 1
+    write /sys/block/sde/queue/iostats 1
+    write /sys/block/sde/queue/scheduler deadline
+    write /sys/block/sde/queue/iosched/slice_idle 0
+    write /sys/block/sde/queue/read_ahead_kb 128
+    write /sys/block/sde/queue/nr_requests 256
+    write /sys/module/governor_msm_adreno_tz/parameters/boost_freq 0
+    write /sys/module/governor_msm_adreno_tz/parameters/boost_duration 0
+    write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 180000000
+    write /sys/class/kgsl/kgsl-3d0/max_gpuclk 414000000 
