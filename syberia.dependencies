@@ -1,0 +1,27 @@
+[
+  {
+    "repository": "LineageOS/android_hardware_qcom_display",
+    "target_path": "hardware/qcom/display-caf/msm8998",
+    "revision": "lineage-16.0-caf-8998"
+  },
+   {
+    "repository": "LineageOS/android_hardware_qcom_media",
+    "target_path": "hardware/qcom/media-caf/msm8998",
+    "revision": "lineage-16.0-caf-8998"
+  },
+   {
+    "repository": "LineageOS/android_hardware_qcom_audio",
+    "target_path": "hardware/qcom/audio-caf/msm8998",
+    "revision": "lineage-16.0-caf-8998"
+  },
+   {
+    "repository": "LineageOS/android_packages_resources_devicesettings",
+    "target_path": "packages/resources/devicesettings",
+    "branch": "lineage-16.0"
+  },
+   {
+    "repository": "wight554/chiron",
+    "target_path": "kernel/xiaomi/msm8998",
+    "branch": "pie-placeholder"
+  }
+]
