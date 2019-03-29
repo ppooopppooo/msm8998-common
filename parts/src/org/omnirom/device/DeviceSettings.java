@@ -107,14 +107,8 @@ public class DeviceSettings extends PreferenceFragment implements
         mS2S.setValue(FileUtils.getFileValue(FILE_S2S_TYPE, "0"));
         mS2S.setOnPreferenceChangeListener(this);
 
-        if (FileUtils.isFileWritable(BUTTONS_SWAP_PATH)) {
-            mButtonSwap = (SwitchPreference) findPreference(BUTTONS_SWAP_KEY);
-            mButtonSwap.setChecked(FileUtils.getFileValueAsBoolean(BUTTONS_SWAP_PATH, false));
-            mButtonSwap.setOnPreferenceChangeListener(this);
-        } else {
-            mHWButtons = (PreferenceCategory) prefSet.findPreference("hw_buttons");
-            prefSet.removePreference(mHWButtons);
-        }
+        mHWButtons = (PreferenceCategory) prefSet.findPreference("hw_buttons");
+        prefSet.removePreference(mHWButtons);
 
         if (FileUtils.isFileWritable(USB_FASTCHARGE_PATH)) {
           mFastcharge = (SwitchPreference) findPreference(USB_FASTCHARGE_KEY);
